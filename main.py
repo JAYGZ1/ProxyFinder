@@ -68,6 +68,7 @@ class ProxyCheckerApp:
 
     def __init__(self, root):
         self.root = root
+        self.public_results = []
 
         self.root.title(f"代理查找检测工具 v{APP_VERSION}")
         if getattr(sys, "frozen", False):
@@ -84,9 +85,15 @@ class ProxyCheckerApp:
             )
 
         try:
-            self.root.iconbitmap(icon_path)
+            self.root.iconbitmap(default=icon_path)
         except tk.TclError:
-            pass
+            try:
+                icon_image = tk.PhotoImage(file=icon_path)
+                self.root.iconphoto(True, icon_image)
+            except Exception:
+                pass
+
+
         self.root.geometry("1250x820")
         self.root.minsize(1050, 700)
 
@@ -317,6 +324,32 @@ class ProxyCheckerApp:
             anchor="w",
             padx=10,
             pady=(10, 4)
+        )
+
+        self.public_country_var = tk.StringVar(
+            value="全部国家"
+        )
+
+        self.public_country_combo = ttk.Combobox(
+            self.root,
+            textvariable=self.public_country_var,
+            state="readonly",
+            width=18
+        )
+
+        self.public_country_combo["values"] = (
+            "全部国家",
+        )
+
+        self.public_country_combo.pack(
+            anchor="w",
+            padx=10,
+            pady=(0, 5)
+        )
+
+        self.public_country_combo.bind(
+            "<<ComboboxSelected>>",
+            self.filter_public_country
         )
 
         table1_frame = ttk.Frame(self.root)
@@ -1167,6 +1200,10 @@ class ProxyCheckerApp:
 
         self.public_results.clear()
         self.exit_results.clear()
+
+        self.public_country_var.set(
+            "全部国家"
+        )
 
         self.clear_tree(
             self.public_tree
@@ -2120,6 +2157,8 @@ class ProxyCheckerApp:
             result
         )
 
+        self.update_public_country_list()
+
         self.working_count += 1
 
         self.update_stats()
@@ -2170,6 +2209,8 @@ class ProxyCheckerApp:
             result
         )
 
+        self.update_public_country_list()
+
         self.working_count += 1
 
         self.update_stats()
@@ -2204,6 +2245,7 @@ class ProxyCheckerApp:
             False
         ):
             return
+
 
         protocol = result.get(
             "protocol",
@@ -2278,6 +2320,102 @@ class ProxyCheckerApp:
     # ==========================================================
     # ①动态排序
     # ==========================================================
+
+    def update_public_country_list(self):
+
+        countries = set()
+
+        for result in self.public_results:
+
+            country = str(
+                result.get("country", "")
+            ).strip()
+
+            if country:
+                countries.add(country)
+
+        country_list = [
+                           "全部国家"
+                       ] + sorted(countries)
+
+        self.public_country_combo["values"] = country_list
+
+    def filter_public_country(self, event=None):
+
+        selected_country = self.public_country_var.get()
+
+        for item_id in self.public_tree.get_children():
+            self.public_tree.delete(item_id)
+
+        for result in self.public_results:
+
+            country = str(
+                result.get("country", "")
+            ).strip()
+
+            if (
+                    selected_country != "全部国家"
+                    and country != selected_country
+            ):
+                continue
+
+            protocol = result.get(
+                "protocol",
+                ""
+            )
+
+            ip = result.get(
+                "ip",
+                ""
+            )
+
+            port = result.get(
+                "port",
+                ""
+            )
+
+            tcp_delay = result.get(
+                "tcp_delay"
+            )
+
+            proxy_delay = result.get(
+                "proxy_delay"
+            )
+
+            if tcp_delay is not None:
+                tcp_text = (
+                    f"{tcp_delay:.0f} ms"
+                )
+            else:
+                tcp_text = "-"
+
+            if proxy_delay is not None:
+                proxy_text = (
+                    f"{proxy_delay:.0f} ms"
+                )
+            else:
+                proxy_text = "-"
+
+            status = result.get(
+                "status",
+                ""
+            )
+
+            self.public_tree.insert(
+                "",
+                "end",
+                values=(
+                    protocol.upper(),
+                    ip,
+                    port,
+                    country,
+                    tcp_text,
+                    proxy_text,
+                    status
+                )
+            )
+
+        self.sort_public_tree()
 
     def sort_public_tree(self):
 
@@ -2513,6 +2651,12 @@ class ProxyCheckerApp:
         )
 
         self.public_results.clear()
+
+        self.public_country_var.set(
+            "全部国家"
+        )
+
+        self.update_public_country_list()
 
         self.exit_results.clear()
 
