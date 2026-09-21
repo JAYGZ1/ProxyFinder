@@ -13,7 +13,7 @@ import requests
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 
 
 PROXY_LIST_URL = (
@@ -85,13 +85,25 @@ class ProxyCheckerApp:
             )
 
         try:
-            self.root.iconbitmap(default=icon_path)
-        except tk.TclError:
-            try:
-                icon_image = tk.PhotoImage(file=icon_path)
-                self.root.iconphoto(True, icon_image)
-            except Exception:
-                pass
+            icon_png_path = os.path.join(
+                sys._MEIPASS if getattr(sys, "frozen", False)
+                else os.path.dirname(
+                    os.path.abspath(__file__)
+                ),
+                "a1.png"
+            )
+
+            self.icon_image = tk.PhotoImage(
+                file=icon_png_path
+            )
+
+            self.root.iconphoto(
+                True,
+                self.icon_image
+            )
+
+        except Exception:
+            pass
 
 
         self.root.geometry("1250x820")

@@ -7,6 +7,7 @@ a = Analysis(
     binaries=[],
     datas=[
     ('dist/updater.exe', '.'),
+    ('a1.png', '.'),
 ],
     hiddenimports=[],
     hookspath=[],
@@ -24,7 +25,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='LswProxyFinder_v1.0',
+    name='LswProxyFinder_v1.0.1',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
