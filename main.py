@@ -713,29 +713,8 @@ class ProxyCheckerApp:
 
     def get_latest_release(self):
         try:
-            token = subprocess.check_output(
-                [
-                    r"C:\Program Files\GitHub CLI\gh.exe",
-                    "auth",
-                    "token"
-                ],
-                text=True
-            ).strip()
-
-            headers = {
-                "Authorization": f"Bearer {token}",
-                "Accept": "application/vnd.github+json"
-            }
-
-            proxies = {
-                "http": "socks5h://192.168.3.101:10808",
-                "https": "socks5h://192.168.3.101:10808"
-            }
-
             response = requests.get(
                 "https://api.github.com/repos/JAYGZ1/ProxyFinder/releases/latest",
-                headers=headers,
-                proxies=proxies,
                 timeout=15
             )
 
@@ -756,14 +735,8 @@ class ProxyCheckerApp:
     def download_update(self, download_url, output_path):
         try:
 
-            proxies = {
-                "http": "socks5h://192.168.3.101:10808",
-                "https": "socks5h://192.168.3.101:10808"
-            }
-
             with requests.get(
                     download_url,
-                    proxies=proxies,
                     stream=True,
                     timeout=30
             ) as response:
@@ -946,14 +919,8 @@ class ProxyCheckerApp:
 
     def fetch_residential_proxies(self):
         try:
-            proxies = {
-                "http": "socks5h://192.168.3.101:10808",
-                "https": "socks5h://192.168.3.101:10808"
-            }
-
             response = requests.get(
                 RESIDENTIAL_PROXY_URL,
-                proxies=proxies,
                 timeout=30
             )
 
