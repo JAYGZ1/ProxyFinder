@@ -68,7 +68,7 @@
 
 
 
-1\. 启动 `LswProxyFinder.exe`
+1\. 启动 `LswProxyFinder_v1.0.1.exe`
 
 2\. 点击 \*\*获取代理\*\*
 
@@ -92,7 +92,7 @@
 
 
 
-\*\*v1.0.0\*\*
+\*\*v1.0.1\*\*
 
 
 
@@ -100,7 +100,7 @@
 
 
 
-`LswProxyFinder\_v1.0.exe`
+`LswProxyFinder\_v1.0.1.exe`
 
 
 
@@ -108,7 +108,7 @@
 
 
 
-\[下载 v1.0.0](https://github.com/JAYGZ1/ProxyFinder/releases/tag/v1.0.0)
+\[下载 v1.0.1](https://github.com/JAYGZ1/ProxyFinder/releases/tag/v1.0.1)
 
 
 
@@ -202,9 +202,9 @@ ProxyFinder/
 
 ├── LswProxyFinder\_v1.0.spec
 
-├── version.json
-
 ├── a1.ico
+
+├── a1.png
 
 ├── LICENSE
 
